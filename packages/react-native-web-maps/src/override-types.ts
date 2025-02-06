@@ -14,5 +14,6 @@ declare module 'react-native-maps' {
     googleMapsMapId?: string;
     loadingFallback?: JSX.Element;
     options?: google.maps.MapOptions;
+    mapType?: 'standard' | 'satellite' | 'hybrid' | 'terrain';
   }
 }

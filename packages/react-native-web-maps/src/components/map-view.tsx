@@ -281,6 +281,36 @@ function _MapView(props: MapViewProps, ref: ForwardedRef<Partial<RNMapView>>) {
     }
   }, [props.followsUserLocation, userLocation]);
 
+  useEffect(() => {
+    if (map && props.region) {
+      const newZoom = Math.round(
+        Math.log(360 / props.region.longitudeDelta) / Math.LN2
+      );
+      map.setCenter({
+        lat: props.region.latitude,
+        lng: props.region.longitude,
+      });
+      map.setZoom(newZoom);
+    }
+  }, [map, props.region]);
+
+  const computedMapTypeId = React.useMemo(() => {
+    if (props.mapType) {
+      switch (props.mapType) {
+        case 'satellite':
+          return 'satellite';
+        case 'hybrid':
+          return 'hybrid';
+        case 'terrain':
+          return 'terrain';
+        case 'standard':
+        default:
+          return 'roadmap';
+      }
+    }
+    return 'roadmap';
+  }, [props.mapType]);
+
   const mapNode = useMemo(
     () => (
       <GoogleMap
@@ -313,6 +343,8 @@ function _MapView(props: MapViewProps, ref: ForwardedRef<Partial<RNMapView>>) {
         center={
           map
             ? map.getCenter()
+            : props.region
+            ? { lat: props.region.latitude, lng: props.region.longitude }
             : {
                 lat:
                   props.initialCamera?.center.latitude ||
@@ -325,6 +357,7 @@ function _MapView(props: MapViewProps, ref: ForwardedRef<Partial<RNMapView>>) {
               }
         }
         options={{
+          mapTypeId: computedMapTypeId,
           scrollwheel: props.zoomEnabled,
           disableDoubleClickZoom: !props.zoomTapEnabled,
           zoomControl: props.zoomControlEnabled,
@@ -361,6 +394,8 @@ function _MapView(props: MapViewProps, ref: ForwardedRef<Partial<RNMapView>>) {
       props.showsScale,
       props.customMapStyle,
       props.options,
+      computedMapTypeId,
+      props.region,
     ]
   );
 
