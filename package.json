@@ -12,6 +12,7 @@
     "packages": [
       "./packages/*",
       "./example",
+      "./example-next",
       "./docs"
     ]
   },
@@ -21,6 +22,7 @@
     "build": "turbo run build --filter @teovilla/*",
     "dev": "turbo run dev",
     "example": "yarn --cwd example",
+    "example-next": "yarn --cwd example-next",
     "lib": "yarn --cwd packages/react-native-web-maps",
     "docs": "yarn --cwd docs",
     "prepare": "husky install",
